@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="60" viewBox="0 0 480 120">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#ff3b30"/>
+      <stop offset="1" stop-color="#00d4ff"/>
+    </linearGradient>
+    <style>
+      .title { font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; font-size:64px; fill: url(#g); }
+      .sub { font-family: 'Inter', Arial, sans-serif; font-size:18px; fill:#ffffff; opacity:0.85 }
+      .shadow { filter: drop-shadow(0 6px 6px rgba(0,0,0,0.45)); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" rx="12" fill="#0f1226" />
+
+  <g class="shadow">
+    <text x="40" y="78" class="title">Memory</text>
+    <text x="42" y="102" class="sub">Anime Edition</text>
+  </g>
+
+  <!-- small star icon to the left -->
+  <g transform="translate(8,36)">
+    <polygon points="12,0 15,8 24,8 17,13 19,21 12,16 5,21 7,13 0,8 9,8" fill="#ffd300" />
+  </g>
+</svg>

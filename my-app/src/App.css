@@ -36,3 +36,297 @@
     transform: rotate(360deg);
   }
 }
+
+/* Theme variables - Vibrant Shōnen */
+:root {
+  --bg: #0f1226;
+  --surface: #121428;
+  --card-back: #1b1f3b;
+  --primary: #ff3b30;
+  --secondary: #ffd300;
+  --accent: #00d4ff;
+  --text: #ffffff;
+  --muted: #bfc6d9;
+
+  --card-width: 84px;
+  --card-height: 120px;
+  --gap: 8px;
+  --radius: 8px;
+}
+
+body, .App {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  margin: 0;
+}
+
+/* page background - use a large anime background image with subtle overlay */
+/* body background is set inline to avoid css-loader resolving public paths during build */
+body {
+  background-color: var(--bg);
+}
+
+.navbar {
+  height: 56px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  background: transparent;
+  color: var(--text);
+  padding: 8px 12px;
+}
+
+.navbar .menu { display: none; }
+
+.controls {
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  padding:12px;
+  flex-wrap:wrap;
+}
+
+.controls .selectPairs button {
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.08);
+  color:var(--text);
+  padding:8px 12px;
+  border-radius:6px;
+}
+
+.controls .start {
+  background: linear-gradient(90deg,var(--primary),var(--accent));
+  color: #fff;
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.card-outer {
+  width: var(--card-width);
+  height: var(--card-height);
+  perspective: 1000px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  /* merged styles from previous .card rule for consistent sizing/visuals */
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  background: var(--card-back);
+  display: inline-block;
+  cursor: pointer;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* visual state when flipped (applies to outer wrapper) */
+.card-outer.flipped {
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.grid {
+  /* Use CSS Grid with fixed column width equal to card size. The JS will
+     append invisible placeholder cells so the last row stays aligned. */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--card-width), var(--card-width)));
+  gap: calc(var(--gap) * 1.5);
+  justify-content: center; /* center the whole grid within container */
+  padding: 18px;
+  max-width: 1100px;
+  margin: 18px auto;
+}
+
+/* Responsive card sizing: adjust the CSS variables rather than forcing
+   the number of columns. This keeps card proportions consistent while
+   allowing more cards per row as the viewport grows. */
+@media (min-width: 480px) {
+  :root { --card-width: 96px; --card-height: 140px; }
+}
+
+@media (min-width: 768px) {
+  :root { --card-width: 112px; --card-height: 160px; }
+  /* Slightly increase outer wrapper so the 3D perspective looks nicer on desktop */
+  .card-outer { width: calc(var(--card-width) * 1.05); height: calc(var(--card-height) * 1.05); }
+}
+
+/* placeholder cell to fill last row so items stay aligned */
+.card-placeholder {
+  width: var(--card-width);
+  height: var(--card-height);
+  visibility: hidden;
+}
+
+/* Start banner animation */
+.start-banner {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, rgba(255,59,48,0.95), rgba(0,212,255,0.95));
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+  z-index: 1200;
+  animation: bannerPop 900ms ease forwards;
+}
+@keyframes bannerPop {
+  0% { transform: translateX(-50%) translateY(-8px) scale(0.9); opacity: 0; }
+  60% { transform: translateX(-50%) translateY(4px) scale(1.06); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+}
+
+/* Victory modal enhancements */
+.victory .win-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border-radius: 12px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  transform-origin: center;
+  animation: winPulse 900ms cubic-bezier(.2,.9,.3,1) forwards;
+}
+.victory h2 {
+  font-size: 2rem;
+  margin: 0 0 8px 0;
+  color: var(--secondary);
+  text-shadow: 0 4px 18px rgba(0,0,0,0.6);
+}
+@keyframes winPulse {
+  0% { transform: scale(0.9) rotate(-6deg); opacity: 0; }
+  60% { transform: scale(1.04) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* small sparkling stars around victory */
+.victory .stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.victory .stars::before,
+.victory .stars::after {
+  content: "";
+  position: absolute;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+  box-shadow: 0 0 12px rgba(0,212,255,0.85), -20px -10px 8px rgba(255,59,48,0.65);
+  opacity: 0.9;
+  top: 20%; left: 15%;
+  transform: translate(-50%, -50%) scale(0.8);
+  animation: starMove 1500ms ease-in-out infinite;
+}
+.victory .stars::after { left: 85%; top: 35%; animation-delay: 300ms; }
+@keyframes starMove { 0% { transform: translate(-50%,-50%) scale(0.85) rotate(0);} 50% { transform: translate(-50%,-60%) scale(1.1) rotate(45deg);} 100% { transform: translate(-50%,-50%) scale(0.85) rotate(0);} }
+
+.main {
+  min-height: calc(100vh - 120px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-top: 12px;
+}
+
+.footer {
+  padding: 12px 16px;
+  text-align:center;
+  color: var(--muted);
+}
+
+.victory {
+  /* overlay: show above the cards without affecting layout */
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
+  color: var(--text);
+  z-index: 2000; /* above cards and other UI */
+  pointer-events: auto;
+}
+
+/* 3D flip styles for card */
+.card-outer {
+  width: var(--card-width);
+  height: var(--card-height);
+  perspective: 1000px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 600ms;
+  transform-style: preserve-3d;
+  border-radius: var(--radius);
+}
+.card-outer.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.card-front {
+  background: #fff;
+}
+.card-back {
+  transform: rotateY(180deg);
+  background: var(--card-back);
+}
+.card-face img { width:100%; height:100%; object-fit:cover; }
+
+/* Hover / focus effects for cards */
+.card-outer {
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  will-change: transform, box-shadow;
+}
+.card-outer:hover:not(.flipped) {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+}
+.card-outer.flipped:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.42);
+}
+.card-outer:focus-visible {
+  outline: 3px solid rgba(0,212,255,0.18);
+  outline-offset: 3px;
+}
+
+/* Buttons hover/focus */
+.controls button,
+.navbar .burger,
+.navbar .menu button {
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+.controls button:hover,
+.navbar .burger:hover,
+.navbar .menu button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+.controls .start:hover {
+  filter: brightness(1.06);
+}
+.controls button:active,
+.navbar .burger:active {
+  transform: translateY(0) scale(0.995);
+}
+.controls button:focus-visible {
+  outline: 3px solid rgba(0,212,255,0.16);
+  outline-offset: 3px;
+}
